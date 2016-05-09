@@ -56,7 +56,7 @@ void Parser::parse(Scene *sc, char* fileName) {
         if (type == "resolution:") {
             float w, h, d;
             line >> w >> h >> d;
-            sc->image.setRes(w,h,d);
+            sc->setRes(w,h,d);
             
         } else if (type == "output:" ) {
             string s;

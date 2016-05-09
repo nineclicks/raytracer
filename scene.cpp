@@ -7,8 +7,8 @@ void Scene::setRes(int w, int h, int d) {
     image.setRes(w, h, d);
     windowScale = 1.0 / image.width / scale;
     windowVect();
-    softShadows = 1;
-    occlusion = 1;
+    //softShadows = 1;
+    //occlusion = 1;
 }
 
 Light* Scene::newLight() {
