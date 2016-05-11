@@ -6,7 +6,7 @@ void Parser::parseOBJ(Scene *sc, const char* fileName) {
     string lines;
     vector<Vec> Vecs;
     Object *o = NULL;
-    
+
     while(getline(file,lines)) {
         istringstream line(lines);
         string type;
@@ -33,17 +33,20 @@ void Parser::parseOBJ(Scene *sc, const char* fileName) {
 void Parser::parse(Scene *sc, char* fileName) {
     ifstream file(fileName, ifstream::in);
     string lines;
-    
+
     Vec cameraOrigin;
     Vec cameraFocus;
     float cameraScale = 1.0;
     int AnyLightRadius = 0;
     int LastObjectALight = 0;    
     Object *o = NULL;
-    
+    string outp = "out.txt";
+    strcpy(sc->output, outp.c_str());
+
+
     int ignore = 0;
     while (getline(file,lines)) {
-        
+
         if (lines == "/*")
             ignore = 1;
         if (lines == "*/")
@@ -57,7 +60,7 @@ void Parser::parse(Scene *sc, char* fileName) {
             float w, h, d;
             line >> w >> h >> d;
             sc->setRes(w,h,d);
-            
+
         } else if (type == "output:" ) {
             string s;
             line >> s;
@@ -66,27 +69,27 @@ void Parser::parse(Scene *sc, char* fileName) {
             float x, y, z;
             line >> x >> y >> z;
             cameraOrigin.set(x,y,z);
-            
+
         } else if (type == "camera-focus:") {
             float x, y, z;
             line >> x >> y >> z;
             cameraFocus.set(x,y,z);
-            
+
         } else if (type == "file-name:") {
             line >> sc->image.fileName;
-            
+
         } else if (type == "camera-zoom:") {
             line >> cameraScale;
-            
+
         } else if (type == "supersample:") {
             line >> sc->superSample;
-            
+
         } else if (type == "recursion:") {
             line >> sc->recursion;
-            
+
         } else if (type == "shadow-sample:") {
             line >> sc->shadowSample;
-           
+
         } else if (type == "ambient:") {
             float x, y, z;
             line >> x >> y >> z;
@@ -96,12 +99,12 @@ void Parser::parse(Scene *sc, char* fileName) {
             int x;
             line >> x;
             sc->softShadows = x;
-            
+
         } else if (type == "occlusion:") {
             int x;
             line >> x;
             sc->occlusion = x;
-          
+
         } else if (type == "sample-method:") {
             string sm;
             line >> sm;
@@ -109,7 +112,7 @@ void Parser::parse(Scene *sc, char* fileName) {
                 sc->sampleMethod = 0;
             else if (sm == "random")
                 sc->sampleMethod = 1;
-                    
+
         } else if (type == "object:") {
             LastObjectALight = 0;
             string ob;
@@ -129,40 +132,40 @@ void Parser::parse(Scene *sc, char* fileName) {
             float x, y, z;
             line >> x >> y >> z;
             o->AddVert(x,y,z);
-            
+
         } else if (type == "vert1:" && o != NULL) {
             float x, y, z;
             line >> x >> y >> z;
             o->SetVert(0,x,y,z);
-            
+
         } else if (type == "vert2:" && o != NULL) {
             float x, y, z;
             line >> x >> y >> z;
             o->SetVert(1,x,y,z);
-        
+
         } else if (type == "vert3:" && o != NULL) {
             float x, y, z;
             line >> x >> y >> z;
             o->SetVert(2,x,y,z);
-        
+
         } else if (type == "image-vert1:" && o != NULL) {
             float x, y;
             line >> x >> y;
             o->texture.imageVert[0][0] = x;
             o->texture.imageVert[0][1] = y;
-            
+
         } else if (type == "image-vert2:" && o != NULL) {
             float x, y;
             line >> x >> y;
             o->texture.imageVert[1][0] = x;
             o->texture.imageVert[1][1] = y;
-        
+
         } else if (type == "image-vert3:" && o != NULL) {
             float x, y;
             line >> x >> y;
             o->texture.imageVert[2][0] = x;
             o->texture.imageVert[2][1] = y;
-        
+
         } else if (type == "origin:" && o != NULL) {
             float x, y, z;
             line >> x >> y >> z;
@@ -186,52 +189,52 @@ void Parser::parse(Scene *sc, char* fileName) {
             float r, g, b;
             line >> r >> g >> b;
             o->texture.color.set(r,g,b);
-            
+
         } else if (type == "color2:" && o != NULL) {
             float r, g, b;
             line >> r >> g >> b;
             o->texture.color2.set(r,g,b);
-            
+
         } else if (type == "color3:" && o != NULL) {
             float r, g, b;
             line >> r >> g >> b;
             o->texture.color3.set(r,g,b);
-            
+
         } else if (type == "texture-scale:" && o != NULL) {
             float s;
             line >> s;
             o->texture.scale = s;
-            
+
         } else if (type == "radius:" && o != NULL) {
             float r;
             line >> r;
             o->SetRadius(r);
             if(r != 0.0 && LastObjectALight)
                 AnyLightRadius = 1;
-            
+
         } else if (type == "reflection:" && o != NULL) {
             float r;
             line >> r;
             o->texture.reflection = r;
-            
+
         } else if (type == "intensity:" && o != NULL) {
             float i;
             line >> i;
             o->SetIntensity(i);
-            
+
         } else if (type == "image:" && o != NULL) {
             string s;
             line >> s;
             o->texture.image = sc->AddTexture(s.c_str());
-            
+
         } else if (type == "obj:") {
             string s;
             line >> s;
             parseOBJ(sc, s.c_str());
-            
+
         }
     }
-    
+
     file.close();
     if(AnyLightRadius == 0)
         sc->softShadows = 0;
