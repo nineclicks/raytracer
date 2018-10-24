@@ -105,14 +105,16 @@ bool fimage::validCoord(int x, int y) {
 }
 
 void fimage::save() {
-    unsigned char saveData[count];
+    unsigned char* saveData;
+    saveData = (unsigned char*) calloc(count, sizeof(unsigned char));
     ofstream file;
     file.open(fileName);
     charFromFloat(this, saveData, depth);
     file << "P6\n" << width << " " << height << "\n" << (int)floor(depth) - 1 << "\n";
     for (int i = 0; i < count; i++) {
-        file << saveData[i];
+        file << (unsigned char) saveData[i];
     }
+    free(saveData);
     file.close();
 }
 void fimage::testImage() {
