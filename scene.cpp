@@ -3,12 +3,10 @@
 
 
 Scene::Scene(){}
-void Scene::setRes(int w, int h, int d) {
-    image.setRes(w, h, d);
+void Scene::setRes(int w, int h, int d, int div) {
+    image.setRes(w / div, h / div, d);
     windowScale = 1.0 / image.width / scale;
     windowVect();
-    //softShadows = 1;
-    //occlusion = 1;
 }
 
 Light* Scene::newLight() {
@@ -203,10 +201,9 @@ Vec Scene::TraceLight(hit h, Vec d) {
 }
 
 float Scene::Occlusion(hit h, Vec d) {
-    int occ = 25;
     float dist = 0.0;
     float th = 1.0;
-    for (int i = 0; i < occ; i++) {
+    for (int i = 0; i < occlusionSamples; i++) {
         Vec dir(RAND - 0.5, RAND - 0.5, RAND - 0.5); //Uneven distribution, fix this
         dir.normalize();
         if ((h.normal.dot(dir) < 0.0) == (h.normal.dot(d) < 0.0))
@@ -223,7 +220,7 @@ float Scene::Occlusion(hit h, Vec d) {
         }
 
     }
-    dist /= occ;
+    dist /= occlusionSamples;
     if (dist > th)
         dist = th;
     return dist / th;

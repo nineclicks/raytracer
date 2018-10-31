@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
             sc.softShadows = 0;
             sc.recursion = 6;
             sc.occlusion = 0;
-            sc.setRes(600,400,256);
+            sc.setRes(600,400,256,1);
         } else if (argv[i][0] == '-' && argv[i][1] == 'o'){
 			strcpy(sc.image.fileName,argv[i+1]);
 		}

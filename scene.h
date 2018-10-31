@@ -39,6 +39,7 @@ public:
     int sampleMethod;
     int softShadows;
     int occlusion;
+    int occlusionSamples = 25;
     Vec win; // window reletive to pov
     Vec pov; // pov
     Vec p;   // aboslute center point of window
@@ -50,7 +51,7 @@ public:
     
     fimage *AddTexture(const char *c);
     
-    void setRes(int w, int h, int d);
+    void setRes(int w, int h, int d, int div);
     
     void setCamera(Vec origin, Vec focus, float s);
     

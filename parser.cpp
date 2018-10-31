@@ -57,9 +57,9 @@ void Parser::parse(Scene *sc, char* fileName) {
         string type;
         line >> type;
         if (type == "resolution:") {
-            float w, h, d;
-            line >> w >> h >> d;
-            sc->setRes(w,h,d);
+            float w, h, d, div;
+            line >> w >> h >> d >> div;
+            sc->setRes(w,h,d, div);
 
         } else if (type == "output:" ) {
             string s;
@@ -104,6 +104,11 @@ void Parser::parse(Scene *sc, char* fileName) {
             int x;
             line >> x;
             sc->occlusion = x;
+
+        } else if (type == "occlusion-samples:") {
+            int x;
+            line >> x;
+            sc->occlusionSamples = x;
 
         } else if (type == "sample-method:") {
             string sm;
