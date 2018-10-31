@@ -124,7 +124,7 @@ void Scene::drawScene() {
             float lastSpeed = s / (y-lastY);
 
             if (avg == 0.0) avg = lastSpeed;
-            float avg = smooth * lastSpeed + (1.0-smooth) * avg;
+            avg = smooth * lastSpeed + (1.0-smooth) * avg;
 
             float remTime = avg * ((float)image.height - y);
             printf("\rTime remaining: %.0f seconds. %.0f percent complete.         ",remTime, y / image.height * 100.0);
