@@ -14,37 +14,37 @@ hit Object::Trace(Vec, Vec) {
 }
 void Object::SetNormal(Vec) {}
 Vec Object::GetNormal(){ return Vec(0.0,0.0,0.0); }
-void Object::SetNormal(float, float, float) {}
+void Object::SetNormal(double, double, double) {}
 void Object::Setu(Vec) {}
-void Object::SetRadius(float) {}
-void Object::SetIntensity(float) {}
-void Object::AddVert(float, float, float) {}
+void Object::SetRadius(double) {}
+void Object::SetIntensity(double) {}
+void Object::AddVert(double, double, double) {}
 void Object::AddVert(Vec) {}
-void Object::SetVert(int, float, float, float) {}
+void Object::SetVert(int, double, double, double) {}
 void Object::SetVert(Vec, Vec, Vec) {}
 Vec Object::Color(hit) { return Vec(0.0,0.0,0.0); }
 
-void Light::SetIntensity(float i) {
+void Light::SetIntensity(double i) {
     intensity = i;
 }
 
-void Sphere::SetIntensity(float i) {
+void Sphere::SetIntensity(double i) {
     texture.intensity = i;
 }
 
-void Plane::SetIntensity(float i) {
+void Plane::SetIntensity(double i) {
     texture.intensity = i;
 }
 
-void Triangle::SetIntensity(float i) {
+void Triangle::SetIntensity(double i) {
     texture.intensity = i;
 }
 
-void Poly::SetIntensity(float i) {
+void Poly::SetIntensity(double i) {
     texture.intensity = i;
 }
 
-void Light::SetRadius(float r) { radius = r; }
+void Light::SetRadius(double r) { radius = r; }
 
 Light::Light() {
     radius = 0.0;
@@ -64,10 +64,10 @@ hit Plane::Trace(Vec o, Vec d) {
     Vec location;
     d.normalize();
     Vec n = normal.GetNormalized();
-    float dDotNormal = d.dot(n);
+    double dDotNormal = d.dot(n);
     if (dDotNormal == 0.0)
         return hit(0);
-    float t = -1.0 * (o - origin).dot(n) / dDotNormal;
+    double t = -1.0 * (o - origin).dot(n) / dDotNormal;
     if (t < 0.0) {
         return hit(0);
     }
@@ -95,7 +95,7 @@ Vec Plane::Color(hit t) {
 }
 
 void Plane::SetNormal(Vec v) { normal = v; }
-void Plane::SetNormal(float x, float y, float z) { normal.set(x,y,z); }
+void Plane::SetNormal(double x, double y, double z) { normal.set(x,y,z); }
 Vec Plane::GetNormal() { return normal; }
 void Plane::Setu(Vec v) { u = v; }
 Vec Plane::Getu() { return u; }
@@ -104,14 +104,14 @@ Vec Plane::Getu() { return u; }
 Object::Geometry Triangle::type(){return TRIANGLE;}
 void Triangle::Speak(){printf("Triangle\n");}
 
-void Triangle::AddVert(float x, float y, float z) {
+void Triangle::AddVert(double x, double y, double z) {
     vert[2] = vert[1];
     vert[1] = vert[0];
     vert[0] = Vec(x,y,z);
     CalcNorm();
 }
 
-void Triangle::SetVert(int i, float x, float y, float z) {
+void Triangle::SetVert(int i, double x, double y, double z) {
     vert[i] = Vec(x,y,z);
     CalcNorm();
 }
@@ -140,12 +140,12 @@ hit Triangle::Trace(Vec o, Vec d) {
     Vec location;
     d.normalize();
     Vec n = normal.GetNormalized();
-    float dDotNormal = d.dot(n);
+    double dDotNormal = d.dot(n);
     if (dDotNormal == 0.0)
         return hit(0);
     //if (dDotNormal < 0.0)
     //    n = n * -1.0;
-    float t = -1.0 * (o - origin).dot(n) / dDotNormal;
+    double t = -1.0 * (o - origin).dot(n) / dDotNormal;
     if (t < 0.0) {
         return hit(0);
     }
@@ -162,23 +162,23 @@ bool Triangle::Inside(Vec v) {
 }
 
 Vec Triangle::Barycentric(Vec location) {
-    float ABC = normal.dot((vert[1] - vert[0]).cross(vert[2] - vert[0]));
-    float PBC = normal.dot((vert[1] - location).cross(vert[2] - location));
-    float PCA = normal.dot((vert[2] - location).cross(vert[0] - location));
-    float u = PBC / ABC;
-    float v = PCA / ABC;
+    double ABC = normal.dot((vert[1] - vert[0]).cross(vert[2] - vert[0]));
+    double PBC = normal.dot((vert[1] - location).cross(vert[2] - location));
+    double PCA = normal.dot((vert[2] - location).cross(vert[0] - location));
+    double u = PBC / ABC;
+    double v = PCA / ABC;
     return Vec(u, v, 1.0 - u - v);
 }
 
 Vec Triangle::Color(hit t) {
     if (texture.pattern == Texture::IMAGE) {
-        float u = t.barycentric[0];
-        float v = t.barycentric[1];
-        float w = t.barycentric[2];
-        float x = u * texture.imageVert[0][0] + v * texture.imageVert[1][0] + w * texture.imageVert[2][0];
-        float y = u * texture.imageVert[0][1] + v * texture.imageVert[1][1] + w * texture.imageVert[2][1];
-        x = x * (float)texture.image->width;
-        y = y * (float)texture.image->height;
+        double u = t.barycentric[0];
+        double v = t.barycentric[1];
+        double w = t.barycentric[2];
+        double x = u * texture.imageVert[0][0] + v * texture.imageVert[1][0] + w * texture.imageVert[2][0];
+        double y = u * texture.imageVert[0][1] + v * texture.imageVert[1][1] + w * texture.imageVert[2][1];
+        x = x * (double)texture.image->width;
+        y = y * (double)texture.image->height;
         return texture.image->getPixel(x,y);
     } else {
         return texture.color;
@@ -190,18 +190,18 @@ void Poly::Speak(){printf("Poly\n");}
 
 void Sphere::Speak(){printf("Sphere\n");}
 
-void Sphere::SetRadius(float r) { radius = r; }
+void Sphere::SetRadius(double r) { radius = r; }
 
 hit Sphere::Trace(Vec o, Vec d) {
     d.normalize();
-    float a = d.dot(d);
-    float b = (d.dot(o - origin));
-    float c = (o - origin).dot(o - origin) - radius * radius;
-    float s = b*b - a * c;
+    double a = d.dot(d);
+    double b = (d.dot(o - origin));
+    double c = (o - origin).dot(o - origin) - radius * radius;
+    double s = b*b - a * c;
     if (s < 0.0)
         return hit(0);
-    float d1 = (-1.0 * b + sqrt(s)) / a;
-    float d2 = (-1.0 * b - sqrt(s)) / a;
+    double d1 = (-1.0 * b + sqrt(s)) / a;
+    double d2 = (-1.0 * b - sqrt(s)) / a;
     
     if (d2 < d1 && d2 > 0.0)
         d1 = d2;
@@ -222,8 +222,8 @@ Vec Sphere::Color(hit t) {
     
     if (texture.pattern == Texture::CHECKER) {
         int col = 0;
-        float x = n.AngleX();
-        float y = n.AngleY();
+        double x = n.AngleX();
+        double y = n.AngleY();
         
         if ((int)((x + 0.001) / texture.scale) % 2)
             col ^= 1;
@@ -235,12 +235,12 @@ Vec Sphere::Color(hit t) {
             color = texture.color2;
     } else if (texture.pattern == Texture::IMAGE) {
         
-        float x = n.AngleX();
-        float y = n.AngleY();
+        double x = n.AngleX();
+        double y = n.AngleY();
         
         if(texture.image != NULL) {
-            x = x * (float)texture.image->width / 2.0;
-            y = (float)texture.image->height - y * (float)texture.image->height;
+            x = x * (double)texture.image->width / 2.0;
+            y = (double)texture.image->height - y * (double)texture.image->height;
             return texture.image->getPixel(x,y);
         }
     }

@@ -12,7 +12,7 @@ void Parser::parseOBJ(Scene *sc, const char* fileName) {
         string type;
         line >> type;
         if (type == "v") {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             Vecs.push_back(Vec(x,y,z * -1.0));
         } else if (type == "f") {
@@ -36,7 +36,7 @@ void Parser::parse(Scene *sc, char* fileName) {
 
     Vec cameraOrigin;
     Vec cameraFocus;
-    float cameraScale = 1.0;
+    double cameraScale = 1.0;
     int AnyLightRadius = 0;
     int LastObjectALight = 0;    
     Object *o = NULL;
@@ -57,7 +57,7 @@ void Parser::parse(Scene *sc, char* fileName) {
         string type;
         line >> type;
         if (type == "resolution:") {
-            float w, h, d, div;
+            double w, h, d, div;
             line >> w >> h >> d >> div;
             sc->setRes(w,h,d, div);
 
@@ -66,12 +66,12 @@ void Parser::parse(Scene *sc, char* fileName) {
             line >> s;
             strcpy(sc->output, s.c_str());
         } else if (type == "camera-origin:") {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             cameraOrigin.set(x,y,z);
 
         } else if (type == "camera-focus:") {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             cameraFocus.set(x,y,z);
 
@@ -91,7 +91,7 @@ void Parser::parse(Scene *sc, char* fileName) {
             line >> sc->shadowSample;
 
         } else if (type == "ambient:") {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             sc->ambient.set(x,y,z);
 
@@ -134,49 +134,49 @@ void Parser::parse(Scene *sc, char* fileName) {
             }
             o->texture.pattern = Texture::NONE;
         } else if (type == "vert:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->AddVert(x,y,z);
 
         } else if (type == "vert1:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->SetVert(0,x,y,z);
 
         } else if (type == "vert2:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->SetVert(1,x,y,z);
 
         } else if (type == "vert3:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->SetVert(2,x,y,z);
 
         } else if (type == "image-vert1:" && o != NULL) {
-            float x, y;
+            double x, y;
             line >> x >> y;
             o->texture.imageVert[0][0] = x;
             o->texture.imageVert[0][1] = y;
 
         } else if (type == "image-vert2:" && o != NULL) {
-            float x, y;
+            double x, y;
             line >> x >> y;
             o->texture.imageVert[1][0] = x;
             o->texture.imageVert[1][1] = y;
 
         } else if (type == "image-vert3:" && o != NULL) {
-            float x, y;
+            double x, y;
             line >> x >> y;
             o->texture.imageVert[2][0] = x;
             o->texture.imageVert[2][1] = y;
 
         } else if (type == "origin:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->origin.set(x,y,z);
         } else if (type == "normal:" && o != NULL) {
-            float x, y, z;
+            double x, y, z;
             line >> x >> y >> z;
             o->SetNormal(x,y,z);
         } else if (type == "texture:" && o != NULL) {
@@ -187,43 +187,43 @@ void Parser::parse(Scene *sc, char* fileName) {
             else if (s == "image")
                 o->texture.pattern = Texture::IMAGE;
         } else if (type == "texture-scale:" && o != NULL) {
-            float s;
+            double s;
             line >> s;
             o->texture.scale = s;
         } else if (type == "color:" && o != NULL) {
-            float r, g, b;
+            double r, g, b;
             line >> r >> g >> b;
             o->texture.color.set(r,g,b);
 
         } else if (type == "color2:" && o != NULL) {
-            float r, g, b;
+            double r, g, b;
             line >> r >> g >> b;
             o->texture.color2.set(r,g,b);
 
         } else if (type == "color3:" && o != NULL) {
-            float r, g, b;
+            double r, g, b;
             line >> r >> g >> b;
             o->texture.color3.set(r,g,b);
 
         } else if (type == "texture-scale:" && o != NULL) {
-            float s;
+            double s;
             line >> s;
             o->texture.scale = s;
 
         } else if (type == "radius:" && o != NULL) {
-            float r;
+            double r;
             line >> r;
             o->SetRadius(r);
             if(r != 0.0 && LastObjectALight)
                 AnyLightRadius = 1;
 
         } else if (type == "reflection:" && o != NULL) {
-            float r;
+            double r;
             line >> r;
             o->texture.reflection = r;
 
         } else if (type == "intensity:" && o != NULL) {
-            float i;
+            double i;
             line >> i;
             o->SetIntensity(i);
 

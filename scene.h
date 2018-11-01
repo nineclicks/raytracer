@@ -9,8 +9,8 @@
 #include "fimage.h"
 #include <time.h>
 
-#define RAND (float)rand()/RAND_MAX
-#define INF std::numeric_limits<float>::infinity()
+#define RAND (double)rand()/RAND_MAX
+#define INF std::numeric_limits<double>::infinity()
 #define PI 3.14159265359;
 
 
@@ -31,15 +31,16 @@ public:
     
     char output[64];
 
-    float windowScale;
-    float scale; 
-    float superSample;
-    float shadowSample;
+    double windowScale;
+    double scale; 
+    double superSample;
+    double shadowSample;
     int recursion;
     int sampleMethod;
     int softShadows;
     int occlusion;
     int occlusionSamples = 25;
+    double occlusionRadius = 1.0;
     Vec win; // window reletive to pov
     Vec pov; // pov
     Vec p;   // aboslute center point of window
@@ -53,15 +54,15 @@ public:
     
     void setRes(int w, int h, int d, int div);
     
-    void setCamera(Vec origin, Vec focus, float s);
+    void setCamera(Vec origin, Vec focus, double s);
     
     Scene(int w, int h, int d);
     
     void windowVect();
     
-    Vec getPixelCoordinate(float x, float y);
+    Vec getPixelCoordinate(double x, double y);
     
-    void getPixelVector(float x, float y, Vec *Rp, Vec *RA);
+    void getPixelVector(double x, double y, Vec *Rp, Vec *RA);
     
     Light* newLight();
     
@@ -73,8 +74,8 @@ public:
     }
     
     void drawScene();
-    float SampleLight(hit*, Vec*, Light*, int);
-    float Occlusion(hit h, Vec d);
+    double SampleLight(hit*, Vec*, Light*, int);
+    double Occlusion(hit h, Vec d);
     Vec TraceLight(hit, Vec);
     hit Closest(Vec, Vec);
     Vec Cast(Vec o, Vec d, int depth);

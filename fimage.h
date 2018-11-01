@@ -8,24 +8,24 @@
 
 class fimage {
     public:
-    float *data;
+    double *data;
     int width;
     int height;
     int count;
-    float depth;
+    double depth;
     char fileName[128];
     fimage(const char * name);
     fimage(int w, int h, int d);
     fimage(fimage *im);
     fimage();
     void setRes(int w, int h, int d);
-    void setPixel(int x, int y,float r,float g,float b);
+    void setPixel(int x, int y,double r,double g,double b);
     void setPixel(int x, int y, Vec c);
-    Vec getPixel(float x, float y);
+    Vec getPixel(double x, double y);
     bool validCoord(int x, int y);
     void save();
     void testImage();
-    void charFromFloat(fimage *im, unsigned char* pim, float depth);
+    void charFromFloat(fimage *im, unsigned char* pim, double depth);
     
     int LoadFile(const char * c);
 };

@@ -28,11 +28,11 @@ int fimage::LoadFile(const char * name) {
         count = width * height * 3;
         int c;
         c = file.get();
-        data = new float[count];
+        data = new double[count];
         
         for (int i = 0; i < count; i++) {
             c = file.get();
-            data[i] = (float)c / depth;
+            data[i] = (double)c / depth;
         }
         depth++;
         return 0;
@@ -48,15 +48,15 @@ fimage::fimage(int w, int h, int d) {
     width = w;
     height = h;
     count = w * h * 3;
-    depth = (float)d;
-    data = new float[count];
+    depth = (double)d;
+    data = new double[count];
 }
 fimage::fimage(fimage *im) {
     width = im->width;
     height = im->height;
     count = im->count;
     depth = im->depth;
-    data = new float[count];
+    data = new double[count];
     
     
     for (int i = 0; i < count; i++) {
@@ -68,14 +68,14 @@ void fimage::setRes(int w, int h, int d) {
     width = w;
     height = h;
     count = w * h * 3;
-    depth = (float)d;
+    depth = (double)d;
     if (data == 0)
         delete[] data;
     
-    data = new float[count];
+    data = new double[count];
 }
 
-void fimage::setPixel(int x, int y,float r,float g,float b) {
+void fimage::setPixel(int x, int y,double r,double g,double b) {
     int spot = (y * width + x) * 3;
     if (spot >= count)
         return;
@@ -84,7 +84,7 @@ void fimage::setPixel(int x, int y,float r,float g,float b) {
     data[spot + 2] = b;
 }
 
-Vec fimage::getPixel(float x, float y) {
+Vec fimage::getPixel(double x, double y) {
     int spot = ((int)y * width + (int)x) * 3;
     if (spot >= count)
         return Vec(1.0,0.5,1.0);
@@ -118,18 +118,18 @@ void fimage::save() {
     file.close();
 }
 void fimage::testImage() {
-    float r,g,b;
+    double r,g,b;
     for (int y = 0; y < height; y++){
         for (int x = 0; x < width; x++){
-            r = (float)x / width;
+            r = (double)x / width;
             g = sin(sqrt((x*x+y*y)) / (width/4)) / 2.0 + 0.5;
-            b = (float)y / height;
+            b = (double)y / height;
             setPixel(x,y,r,g,b);
         }
     }
 }
 
-void fimage::charFromFloat(fimage *im, unsigned char* pim, float depth) {    
+void fimage::charFromFloat(fimage *im, unsigned char* pim, double depth) {    
     int w = im->width;
     int h = im->height;
     fimage fim(im);
@@ -137,9 +137,9 @@ void fimage::charFromFloat(fimage *im, unsigned char* pim, float depth) {
     int dith[4][3] = { {1,0,7},{-1,1,3},{0,1,5},{1,1,1} };
 
     
-    float before;
-    float after;
-    float error;
+    double before;
+    double after;
+    double error;
     
     int tx, ty;
     
@@ -165,7 +165,7 @@ void fimage::charFromFloat(fimage *im, unsigned char* pim, float depth) {
                     ty = y + dith[i][1];
                     if (fim.validCoord(tx,ty)) {
                         spot = (ty * w + tx) * 3 + z;
-                        fim.data[spot] += error * (float)dith[i][2] / 16.0;
+                        fim.data[spot] += error * (double)dith[i][2] / 16.0;
                     }
                 }
             }

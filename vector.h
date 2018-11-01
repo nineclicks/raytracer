@@ -6,27 +6,27 @@
 
 class Vec {
 private:
-    float x[3];
+    double x[3];
 public:
-    float AngleX();
-    float AngleY();
-    float& operator[] (int i);
+    double AngleX();
+    double AngleY();
+    double& operator[] (int i);
     Vec();
     
-    Vec(float a, float b, float c);
+    Vec(double a, double b, double c);
     
-    void set(float a, float b, float c);
+    void set(double a, double b, double c);
     
-    float magnitude();
+    double magnitude();
     
     void normalize();
     
     Vec GetNormalized();
     
     Vec cross(Vec v);
-    Vec blend(Vec, float);
+    Vec blend(Vec, double);
     
-    float dot(Vec v);
+    double dot(Vec v);
     
     Vec(const Vec &v);
     
@@ -35,9 +35,9 @@ public:
     Vec operator+(const Vec &v);
     
     Vec operator-(const Vec &v);
-    Vec operator*(const float &f);
-    Vec operator/(const float &f);
-    Vec operator*=(const float &f);
+    Vec operator*(const double &f);
+    Vec operator/(const double &f);
+    Vec operator*=(const double &f);
     
     void print();
 };

@@ -5,7 +5,7 @@
 #include "fimage.h"
 #include "scene.h"
 
-#define RAND (float)rand()/RAND_MAX
+#define RAND (double)rand()/RAND_MAX
 
 //class Scene;
 struct hit;
@@ -17,14 +17,14 @@ public:
     Vec color;
     Vec color2;
     Vec color3;
-    float reflection;
-    float opacity;
-    float refraction;
+    double reflection;
+    double opacity;
+    double refraction;
     Pattern pattern;
-    float scale;
+    double scale;
     fimage* image;
-    float imageVert[3][2];
-    float intensity;
+    double imageVert[3][2];
+    double intensity;
 };
 
 class Object {
@@ -36,13 +36,13 @@ public:
     virtual hit Trace(Vec, Vec);
     virtual void SetNormal(Vec);
     virtual Vec GetNormal();
-    virtual void SetNormal(float, float, float);
+    virtual void SetNormal(double, double, double);
     virtual void Setu(Vec);
-    virtual void SetRadius(float);
-    virtual void SetIntensity(float);
-    virtual void AddVert(float, float, float);
+    virtual void SetRadius(double);
+    virtual void SetIntensity(double);
+    virtual void AddVert(double, double, double);
     virtual void AddVert(Vec);
-    virtual void SetVert(int, float, float, float);
+    virtual void SetVert(int, double, double, double);
     virtual void SetVert(Vec, Vec, Vec);
     virtual Vec Color(hit);
 };
@@ -55,13 +55,13 @@ public:
     hit Trace(Vec o, Vec d);
     
     void SetNormal(Vec v);
-    void SetNormal(float x, float y, float z);
+    void SetNormal(double x, double y, double z);
     Vec GetNormal();
     void Setu(Vec v);
     Vec Getu();
     Vec Color(hit);
     void Speak();
-    void SetIntensity(float);
+    void SetIntensity(double);
 };
 
 class Triangle : public Object {
@@ -70,9 +70,9 @@ public:
     Vec normal;
     Geometry type();
     void Speak();
-    void AddVert(float, float, float);
+    void AddVert(double, double, double);
     void AddVert(Vec);
-    void SetVert(int, float, float, float);
+    void SetVert(int, double, double, double);
     void SetVert(Vec x, Vec y, Vec z);
     void CalcNorm();
     
@@ -81,57 +81,57 @@ public:
     
     bool Inside(Vec v);
     Vec Barycentric(Vec);
-    void SetIntensity(float);
+    void SetIntensity(double);
 };
 
 class Poly : public Object {
 public:
     Vec *vertices;
-    float nVertices;
+    double nVertices;
     Vec normal;
     void Speak();
-    void SetIntensity(float);
+    void SetIntensity(double);
 };
 
 class Sphere : public Object {
 public:
-    float radius;
+    double radius;
     Vec u; //rotation
     Vec v; //rotation
     
-    void SetRadius(float r);
+    void SetRadius(double r);
     
     hit Trace(Vec o, Vec d);
     Vec Color(hit);
     void Speak();
-    void SetIntensity(float);
+    void SetIntensity(double);
 };
 
 class Light : public Object {
 public:
-    float intensity;
-    void SetIntensity(float);
-    void SetRadius(float r);
+    double intensity;
+    void SetIntensity(double);
+    void SetRadius(double r);
     Vec RandomSpot();
-    float radius;
+    double radius;
     Light();
 };
 
 struct hit {
     Vec location;
     Vec normal;
-    float distance;
+    double distance;
     bool contact;
     Object *object;
     Vec barycentric;
-    hit(Object * o, Vec l, float d, Vec n) {
+    hit(Object * o, Vec l, double d, Vec n) {
         object = o;
         location = l;
         normal = n;
         distance = d;
         contact = 1;
     }
-    hit(Object * o, Vec l, float d, Vec n, Vec b) {
+    hit(Object * o, Vec l, double d, Vec n, Vec b) {
         barycentric = b;
         object = o;
         location = l;
