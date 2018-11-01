@@ -37,9 +37,11 @@ public:
     double shadowSample;
     int recursion;
     int sampleMethod;
+    int occlusionMethod;
     int softShadows;
     int occlusion;
     int occlusionSamples = 25;
+    int pass;
     double occlusionRadius = 1.0;
     Vec win; // window reletive to pov
     Vec pov; // pov

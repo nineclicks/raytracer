@@ -115,6 +115,14 @@ void Parser::parse(Scene *sc, char* fileName) {
             line >> x;
             sc->occlusionRadius = x;
 
+        } else if (type == "occlusion-method:") {
+            string om;
+            line >> om;
+            if (om == "uniform")
+                sc->occlusionMethod = 0;
+            else if (om == "random")
+                sc->occlusionMethod = 1;
+
         } else if (type == "sample-method:") {
             string sm;
             line >> sm;

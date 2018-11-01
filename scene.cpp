@@ -95,6 +95,7 @@ void Scene::drawScene() {
     printf("Time remaining:");
     for (double y = 0.0; y < image.height; y++) {
         for (double x = 0.0; x < image.width; x++) {
+            pass = 0;
             Vec co;
             if (sampleMethod == 0 || superSample == 1.0){
                 for (double m1 = 0; m1 < superSample; m1++) {
@@ -203,6 +204,10 @@ Vec Scene::TraceLight(hit h, Vec d) {
 double Scene::Occlusion(hit h, Vec d) {
     double dist = 0.0;
     double th = occlusionRadius;
+
+    if ( ! occlusionMethod)
+        srand(pass++);
+
     for (int i = 0; i < occlusionSamples; i++) {
         Vec dir(RAND - 0.5, RAND - 0.5, RAND - 0.5); //Uneven distribution, fix this
         dir.normalize();
