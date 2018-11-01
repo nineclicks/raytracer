@@ -110,6 +110,11 @@ void Parser::parse(Scene *sc, char* fileName) {
             line >> x;
             sc->occlusionSamples = x;
 
+        } else if (type == "occlusion-radius:") {
+            double x;
+            line >> x;
+            sc->occlusionRadius = x;
+
         } else if (type == "sample-method:") {
             string sm;
             line >> sm;
