@@ -274,7 +274,7 @@ Vec Scene::Cast(Vec o, Vec d, int depth) {
         reflect = Cast(closestHit.location,reflect,depth-1);
         PixelColor = PixelColor  + (reflect * ob->texture.reflection * 0.75);
     }
-    if (occlusion)
+    if (occlusion && ob->texture.intensity != 1.0)
         PixelColor = PixelColor * (0.5+(Occlusion(closestHit,d)/2.0));
     
 

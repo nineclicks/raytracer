@@ -25,7 +25,8 @@ void Parser::parseOBJ(Scene *sc, const char* fileName) {
             o->SetVert(Vecs[x],Vecs[y],Vecs[z]);
             //o->SetVert(Vecs[x],Vecs[z] * -1.0,Vecs[y]);
             o->texture.color = Vec(1.0,1.0,1.0);
-            //o->texture.reflection = 0.0;
+            //o->texture.reflection = 1.0;
+            o->texture.reflection = 0.0;
         }
     }
 }
