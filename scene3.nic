@@ -1,0 +1,64 @@
+resolution: 640 640 256 1
+output: out.txt
+file-name: scene1.ppm
+camera-origin: 0 -5 1
+camera-focus: 0 1 -.3
+camera-zoom: 1
+recursion: 2
+supersample: 4
+sample-method: uniform
+//uniform,random
+ambient: 0 0 0
+soft-shadows: 0
+occlusion: 0
+occlusion-samples: 16
+occlusion-radius: 1
+//uniform, random
+occlusion-method: uniform
+
+object: sphere
+origin: 0 0 0
+radius: 1
+color: 1 1 1
+intensity: 1
+
+object: sphere
+origin: 0 0 0
+radius: 1.5
+color: 1 1 1
+intensity: 0
+
+//object: light
+//radius: .2
+//origin: 0 0 1
+//intensity: .9
+//color: 1 1 1
+
+//object: light
+//radius: 5
+//origin: 0 -10 10
+//intensity: .9
+//color: 1 .5 .5
+//
+//object: light
+//radius: 1
+//origin: 10 0 5
+//intensity: .5
+//color: 0 0 1
+
+object: plane
+origin: 0 0 -1.5
+normal: 0 0 1
+color: 1 1 1
+
+//object: plane
+//origin: 0 1 0
+//normal: 0 -1 0
+//color: 1 1 1
+
+//obj: sphere.obj
+
+//object: sphere
+//origin: -1 -1 -1.25
+//radius: .25
+//color: 0 0 0

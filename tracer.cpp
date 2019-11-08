@@ -23,12 +23,19 @@ using namespace std;
 
 class fimage;
 
+int superX = 0;
+
 int main(int argc, char *argv[])
 {
     if (argc < 2) {
         printf("Usage: './project <scene file name> <options>'\n");
         return 1;
     }        
+
+    if (argc > 2) {
+      superX = atoi(argv[2]);
+      srand(superX);
+    }
 
     Scene sc;
     Parser Parse;
@@ -47,10 +54,9 @@ int main(int argc, char *argv[])
             sc.occlusion = 0;
             sc.setRes(600,400,256,1);
         } else if (argv[i][0] == '-' && argv[i][1] == 'o'){
-			strcpy(sc.image.fileName,argv[i+1]);
-		}
+            strcpy(sc.image.fileName,argv[i+1]);
+        }
     }
-
     sc.drawScene();
 
     sc.image.save();

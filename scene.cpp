@@ -253,6 +253,7 @@ Vec Scene::Cast(Vec o, Vec d, int depth) {
     if (closestHit.contact == 0) {
         PixelColor[0] = PixelColor[1] = 1.0 - d[2] * 1.0;
         PixelColor[2] = 1.0;
+        PixelColor[0] = PixelColor[1] = PixelColor[2] = 0.0;
         return PixelColor;
     } else {
         ob = closestHit.object;
@@ -268,6 +269,23 @@ Vec Scene::Cast(Vec o, Vec d, int depth) {
             PixelColor[2] = c[2] * l[2];
         }
     }
+
+    if (depth > 0) {
+        double lightSamples = 25.0;
+        Vec normal = closestHit.normal;
+
+        for (int i = 0; i < (int) lightSamples; i++) {
+            Vec dir(RAND - 0.5, RAND - 0.5, RAND - 0.5); //Uneven distribution, fix this
+            dir.normalize();
+            if ((normal.dot(dir) < 0.0) == (normal.dot(d) < 0.0))
+                dir = dir * -1.0;
+
+            Vec normalCol = Cast(closestHit.location,dir,depth - 1);
+            //PixelColor = PixelColor + normalCol / 15.0;
+            PixelColor = PixelColor + normalCol / (lightSamples / 15.0) * (1.0 - normal.dot(dir));
+        }
+    }
+
 
     if (ob->texture.reflection > 0.0 && depth > 0) {
         Vec reflect = d - (closestHit.normal * 2.0 * d.dot(closestHit.normal));

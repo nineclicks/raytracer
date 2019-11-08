@@ -192,6 +192,8 @@ void Sphere::Speak(){printf("Sphere\n");}
 
 void Sphere::SetRadius(double r) { radius = r; }
 
+extern int superX;
+
 hit Sphere::Trace(Vec o, Vec d) {
     d.normalize();
     double a = d.dot(d);
@@ -202,9 +204,41 @@ hit Sphere::Trace(Vec o, Vec d) {
         return hit(0);
     double d1 = (-1.0 * b + sqrt(s)) / a;
     double d2 = (-1.0 * b - sqrt(s)) / a;
+
+    double l = 1.0 / 80.0 * (float)superX;
+    double h = .225;
+    double z = .25;
+    double cmin, cmax;
     
-    if (d2 < d1 && d2 > 0.0)
-        d1 = d2;
+    if (d2 < d1 && d2 > 0.0) {
+        Vec location = (d * d2) + o;
+        
+        Vec n = location - origin;
+        n.normalize();
+        
+        hit t = hit(this, location, d2, n);
+
+        Vec n2 = t.normal;
+
+        double x = n2.AngleX();
+        double y = n2.AngleY();
+
+        x = fmod(x,z);
+
+        if (this->texture.intensity == 1.0)
+          return t;
+        
+        cmin = l - (h / 2.0);
+        cmax = l + (h / 2.0);
+        while (cmin < 0.0)
+          cmin += z;
+        while (cmax >= z)
+          cmax -= z;
+        if ((x > cmin && x < cmax) || (cmin > cmax && (x > cmin || x < cmax)))
+          return t;
+
+    }
+
     if (d1 < 0.0)
         return hit(0);
     Vec location = (d * d1) + o;
@@ -212,8 +246,28 @@ hit Sphere::Trace(Vec o, Vec d) {
     Vec n = location - origin;
     n.normalize();
     
+    hit t = hit(this, location, d1, n);
+
+    Vec n2 = t.normal;
+
+    double x = n2.AngleX();
+    double y = n2.AngleY();
+
+    if (this->texture.intensity == 1.0)
+      return t;
+
+    x = fmod(x,z);
+
+    cmin = l - (h / 2.0);
+    cmax = l + (h / 2.0);
+    while (cmin < 0.0)
+      cmin += z;
+    while (cmax >= z)
+      cmax -= z;
+    if ((x > cmin && x < cmax) || (cmin > cmax && (x > cmin || x < cmax)))
+      return t;
     
-    return hit(this, location, d1, n);
+    return hit(0);
 }
 
 Vec Sphere::Color(hit t) {
