@@ -4,8 +4,8 @@
 #include "vector.h"
 #include "fimage.h"
 #include "scene.h"
-
-#define RAND (double)rand()/RAND_MAX
+#include "defines.h"
+extern unsigned int *state;
 
 //class Scene;
 struct hit;

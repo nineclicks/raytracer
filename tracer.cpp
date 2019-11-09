@@ -2,11 +2,9 @@
 //cs371
 //Project - Ray Tracer
 
-//#include <cmath>
 #include <fstream>
 #include <vector>
 #include <string>
-//#include <sstream>
 #include <cstdlib>
 
 #include <cstring>
@@ -20,6 +18,8 @@
 #define uint unsigned int
 
 using namespace std;
+
+unsigned int *state;
 
 class fimage;
 

@@ -8,11 +8,14 @@
 #include "vector.h"
 #include "fimage.h"
 #include <time.h>
+#include <thread>
+#include <mutex>
+#include "defines.h"
 
-#define RAND (double)rand()/RAND_MAX
+extern unsigned int *state;
+
 #define INF std::numeric_limits<double>::infinity()
 #define PI 3.14159265359;
-
 
 using namespace std;
 
@@ -20,9 +23,10 @@ class Object;
 class Light;
 class hit;
 
+
 class Scene {
 public:
-    
+
     vector<Object*> Objects;
     vector<Light*> Lights;
     vector<fimage*> Textures;
@@ -75,6 +79,8 @@ public:
         return p; 
     }
     
+    void drawPixel(double, double);
+    void drawRange(int, int);
     void drawScene();
     double SampleLight(hit*, Vec*, Light*, int);
     double Occlusion(hit h, Vec d);
@@ -83,7 +89,5 @@ public:
     Vec Cast(Vec o, Vec d, int depth);
     
 };
-
-
 
 #endif
