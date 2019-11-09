@@ -23,12 +23,10 @@ class Object;
 class Light;
 class hit;
 
-static thread_local int stateI;
 
 class Scene {
 public:
 
-    
     vector<Object*> Objects;
     vector<Light*> Lights;
     vector<fimage*> Textures;
@@ -82,7 +80,7 @@ public:
     }
     
     void drawPixel(double, double);
-    void drawRange(int);
+    void drawRange(int, int);
     void drawScene();
     double SampleLight(hit*, Vec*, Light*, int);
     double Occlusion(hit h, Vec d);
@@ -91,7 +89,5 @@ public:
     Vec Cast(Vec o, Vec d, int depth);
     
 };
-
-
 
 #endif

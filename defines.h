@@ -1,1 +1,1 @@
-#define RAND (double)rand_r(&state[stateI])/RAND_MAX
+#define RAND (double)rand_r(&state[0])/RAND_MAX
