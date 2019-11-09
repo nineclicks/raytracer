@@ -2,11 +2,9 @@
 //cs371
 //Project - Ray Tracer
 
-//#include <cmath>
 #include <fstream>
 #include <vector>
 #include <string>
-//#include <sstream>
 #include <cstdlib>
 
 #include <cstring>
@@ -47,8 +45,8 @@ int main(int argc, char *argv[])
             sc.occlusion = 0;
             sc.setRes(600,400,256,1);
         } else if (argv[i][0] == '-' && argv[i][1] == 'o'){
-			strcpy(sc.image.fileName,argv[i+1]);
-		}
+            strcpy(sc.image.fileName,argv[i+1]);
+        }
     }
 
     sc.drawScene();

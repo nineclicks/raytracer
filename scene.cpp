@@ -73,11 +73,60 @@ void Scene::getPixelVector(double x, double y, Vec *Rp, Vec *RA) {
     *RA = w - pov;
 }
 
-
-
-void Scene::drawScene() {
+void Scene::drawPixel(double x, double y) {
     Vec o;
     Vec d;
+    pass = 0;
+    Vec co;
+    if (sampleMethod == 0 || superSample == 1.0){
+        for (double m1 = 0; m1 < superSample; m1++) {
+            for (double m2 = 0; m2 < superSample; m2++) {
+                double mx = (double)x + m1 / superSample;
+                double my = (double)y + m2 / superSample;
+                getPixelVector(mx,my,&o,&d);
+                co = co + Cast(o, d, recursion);
+            }
+        }
+    }else if (sampleMethod == 1) {
+        int ss = (int)(superSample*superSample);
+        for (int i = 0; i < ss; i++) {
+            double mx = (double)x + RAND;
+            double my = (double)y + RAND;
+            getPixelVector(mx,my,&o,&d);
+            co = co + Cast(o, d, recursion);
+        }
+    }
+    co = co * (1.0/superSample/superSample);
+    image.setPixel(x,y,co);
+}
+
+mutex mtx1; // take next slice
+mutex mtx2; // ready for new slice
+
+double nextSliceRange[] = {-1.0, -1.0};
+int done = 1;
+
+void Scene::drawRange(int threadNum) {
+    while (1) {
+        mtx1.lock();
+        double rangeStart = nextSliceRange[0];
+        double rangeEnd = nextSliceRange[1];
+        nextSliceRange[0] = nextSliceRange[1] = -1.0;
+        mtx1.unlock();
+
+        printf("Thread: %d, core: %d, range: %f - %f\n", threadNum, sched_getcpu(), rangeStart, rangeEnd);
+        for (double xy = rangeStart; xy < rangeEnd; xy++) {
+            double x = fmod(xy,image.width);
+            double y = floor(xy / image.width);
+            drawPixel(x, y);
+        }
+        printf("Thread: %d, done\n", threadNum);
+        if (done)
+            return;
+    }
+}
+
+void Scene::drawScene() {
     if (superSample < 1.0)
         superSample = 1.0;
 
@@ -93,45 +142,64 @@ void Scene::drawScene() {
     double lastY = 0.0;
     double smooth = .9;
     printf("Time remaining:");
-    for (double y = 0.0; y < image.height; y++) {
-        for (double x = 0.0; x < image.width; x++) {
-            pass = 0;
-            Vec co;
-            if (sampleMethod == 0 || superSample == 1.0){
-                for (double m1 = 0; m1 < superSample; m1++) {
-                    for (double m2 = 0; m2 < superSample; m2++) {
-                        double mx = (double)x + m1 / superSample;
-                        double my = (double)y + m2 / superSample;
-                        getPixelVector(mx,my,&o,&d);
-                        co = co + Cast(o, d, recursion);
-                    }
-                }
-            }else if (sampleMethod == 1) {
-                int ss = (int)(superSample*superSample);
-                for (int i = 0; i < ss; i++) {
-                    double mx = (double)x + RAND;
-                    double my = (double)y + RAND;
-                    getPixelVector(mx,my,&o,&d);
-                    co = co + Cast(o, d, recursion);
-                }
+    double slice = 50000.0;
+    double range = image.height * image.width;
+
+    
+    done = 0;
+    int threadCount = thread::hardware_concurrency();
+    threadCount += 1;
+    printf("\n\nthreads: %d\n\n", threadCount);
+    thread* threads = NULL;
+    double slices [threadCount][2];
+    threads = new thread[threadCount];
+
+    for (int i = 0; i < threadCount; i++) {
+        threads[i] = thread(&Scene::drawRange, this, i);
+    }
+
+    for (double xy = 0.0; xy < range; xy += slice) {
+        double sliceStart = xy;
+        double sliceEnd = xy + slice;
+        if (sliceEnd > range)
+            sliceEnd = range;
+        mtx1.lock();
+        nextSliceRange[0] = sliceStart;
+        nextSliceRange[1] = sliceEnd;
+        mtx1.unlock();
+        while (1) {
+            mtx1.lock();
+            if (nextSliceRange[0] == -1.0) {
+                mtx1.unlock();
+                break;
             }
-            co = co * (1.0/superSample/superSample);
-            image.setPixel(x,y,co);
-        }
-        double s = ((double)(clock()-t2))/CLOCKS_PER_SEC;
-        if(s > 5.0) {
-            double lastSpeed = s / (y-lastY);
-
-            if (avg == 0.0) avg = lastSpeed;
-            avg = smooth * lastSpeed + (1.0-smooth) * avg;
-
-            double remTime = avg * ((double)image.height - y);
-            printf("\rTime remaining: %.0f seconds. %.0f percent complete.         ",remTime, y / image.height * 100.0);
-            fflush(stdout);
-            t2 = clock();
-            lastY = y;
+            mtx1.unlock();
         }
     }
+    done = 1;
+
+    for (int i = 0; i < threadCount; i++) {
+        threads[i].join();
+    }
+
+    //for (double y = 0.0; y < image.height; y++) {
+    //    for (double x = 0.0; x < image.width; x++) {
+    //        drawPixel(x, y);
+    //    }
+    //    double s = ((double)(clock()-t2))/CLOCKS_PER_SEC;
+    //    if(s > 5.0) {
+    //        double lastSpeed = s / (y-lastY);
+
+    //        if (avg == 0.0) avg = lastSpeed;
+    //        avg = smooth * lastSpeed + (1.0-smooth) * avg;
+
+    //        double remTime = avg * ((double)image.height - y);
+    //        printf("\rTime remaining: %.0f seconds. %.0f percent complete.         ",remTime, y / image.height * 100.0);
+    //        fflush(stdout);
+    //        t2 = clock();
+    //        lastY = y;
+    //    }
+    //}
     t = clock() - t;
     double s = ((double)t)/CLOCKS_PER_SEC;
     double sps = (double)(image.width * image.height * superSample * superSample) / s;

@@ -1,4 +1,4 @@
-resolution: 1280 960 256
+resolution: 1280 720 256 1
 file-name: scene1.ppm
 output: out.txt
 camera-origin: 2 -5 0

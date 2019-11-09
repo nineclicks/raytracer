@@ -8,6 +8,8 @@
 #include "vector.h"
 #include "fimage.h"
 #include <time.h>
+#include <thread>
+#include <mutex>
 
 #define RAND (double)rand()/RAND_MAX
 #define INF std::numeric_limits<double>::infinity()
@@ -75,6 +77,8 @@ public:
         return p; 
     }
     
+    void drawPixel(double, double);
+    void drawRange(int);
     void drawScene();
     double SampleLight(hit*, Vec*, Light*, int);
     double Occlusion(hit h, Vec d);
