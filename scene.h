@@ -10,11 +10,12 @@
 #include <time.h>
 #include <thread>
 #include <mutex>
+#include "defines.h"
 
-#define RAND (double)rand()/RAND_MAX
+extern unsigned int *state;
+
 #define INF std::numeric_limits<double>::infinity()
 #define PI 3.14159265359;
-
 
 using namespace std;
 
@@ -22,8 +23,11 @@ class Object;
 class Light;
 class hit;
 
+static thread_local int stateI;
+
 class Scene {
 public:
+
     
     vector<Object*> Objects;
     vector<Light*> Lights;

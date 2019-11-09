@@ -107,6 +107,7 @@ double nextSliceRange[] = {-1.0, -1.0};
 int done = 1;
 
 void Scene::drawRange(int threadNum) {
+    stateI = threadNum;
     while (1) {
         mtx1.lock();
         double rangeStart = nextSliceRange[0];
@@ -142,19 +143,21 @@ void Scene::drawScene() {
     double lastY = 0.0;
     double smooth = .9;
     printf("Time remaining:");
-    double slice = 50000.0;
+    double slice = 100000.0;
     double range = image.height * image.width;
 
     
     done = 0;
     int threadCount = thread::hardware_concurrency();
-    threadCount += 1;
+    //threadCount += 1;
     printf("\n\nthreads: %d\n\n", threadCount);
     thread* threads = NULL;
     double slices [threadCount][2];
     threads = new thread[threadCount];
+    state = new unsigned int[threadCount];
 
     for (int i = 0; i < threadCount; i++) {
+        state[i] = i;
         threads[i] = thread(&Scene::drawRange, this, i);
     }
 

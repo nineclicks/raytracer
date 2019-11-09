@@ -19,6 +19,8 @@
 
 using namespace std;
 
+unsigned int *state;
+
 class fimage;
 
 int main(int argc, char *argv[])
