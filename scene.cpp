@@ -105,11 +105,20 @@ double nextSliceRange[] = {-1.0, -1.0};
 int done = 1;
 
 void Scene::drawRange(int threadCount, int threadNum) {
+    int lastRep = -1;
     printf("Thread: %d, core: %d\n", threadNum, sched_getcpu());
-    for (double xy = threadNum; xy < image.width * image.height; xy+=threadCount) {
+    double imLength = image.width * image.height;
+    for (double xy = threadNum; xy < imLength; xy+=threadCount) {
         double x = fmod(xy,image.width);
         double y = floor(xy / image.width);
         drawPixel(x, y);
+        if (threadNum == 0) {
+            int rep = (int)(xy / imLength * 100.0);
+            if (rep > lastRep) {
+                lastRep = rep;
+                printf("%d%%\n", rep);
+            }
+        }
     }
     printf("Thread: %d, core: %d, done\n", threadNum, sched_getcpu());
 }
