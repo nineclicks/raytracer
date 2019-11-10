@@ -98,14 +98,8 @@ void Scene::drawPixel(double x, double y) {
     image.setPixel(x,y,co);
 }
 
-mutex mtx1; // take next slice
-mutex mtx2; // ready for new slice
-
-double nextSliceRange[] = {-1.0, -1.0};
-int done = 1;
-
 void Scene::drawRange(int threadCount, int threadNum) {
-    int lastRep = -1;
+    int lastRep = 0;
     printf("Thread: %d, core: %d\n", threadNum, sched_getcpu());
     double imLength = image.width * image.height;
     for (double xy = threadNum; xy < imLength; xy+=threadCount) {
@@ -113,10 +107,10 @@ void Scene::drawRange(int threadCount, int threadNum) {
         double y = floor(xy / image.width);
         drawPixel(x, y);
         if (threadNum == 0) {
-            int rep = (int)(xy / imLength * 100.0);
+            int rep = (int)(xy / imLength * 20.0);
             if (rep > lastRep) {
                 lastRep = rep;
-                printf("%d%%\n", rep);
+                printf("%d%%\n", rep * 5);
             }
         }
     }
