@@ -205,9 +205,10 @@ hit Sphere::Trace(Vec o, Vec d) {
     double d1 = (-1.0 * b + sqrt(s)) / a;
     double d2 = (-1.0 * b - sqrt(s)) / a;
 
-    double l = 1.0 / 80.0 * (float)superX;
-    double h = .225;
-    double z = .25;
+    //double l = 1.0 / 80.0 * (float)superX;
+    double l = 0;
+    double h = SP_THICK;
+    double z = SP_DIV;
     double cmin, cmax;
     
     if (d2 < d1 && d2 > 0.0) {
@@ -225,8 +226,11 @@ hit Sphere::Trace(Vec o, Vec d) {
 
         x = fmod(x,z);
 
-        if (this->texture.intensity == 1.0)
+        if (this->texture.intensity != SP_INT)
           return t;
+
+        if ((int)(y * 30) % 2)
+            return t;
         
         cmin = l - (h / 2.0);
         cmax = l + (h / 2.0);
@@ -253,8 +257,11 @@ hit Sphere::Trace(Vec o, Vec d) {
     double x = n2.AngleX();
     double y = n2.AngleY();
 
-    if (this->texture.intensity == 1.0)
+    if (this->texture.intensity != SP_INT)
       return t;
+
+    if ((int)(y * 30) % 2)
+        return t;
 
     x = fmod(x,z);
 

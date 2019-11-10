@@ -275,18 +275,22 @@ Vec Scene::Cast(Vec o, Vec d, int depth) {
     }
 
     if (depth > 0) {
-        double lightSamples = 25.0;
+        double lightSamples = LIGHT_SAMPLES;
         Vec normal = closestHit.normal;
 
         for (int i = 0; i < (int) lightSamples; i++) {
-            Vec dir(RAND - 0.5, RAND - 0.5, RAND - 0.5); //Uneven distribution, fix this
+            double theta = 6.283185307 * RAND; //(2pi * rand)
+            double phi = acos(2 * RAND - 1.0);
+            Vec dir(cos(theta)*sin(phi), sin(theta)*sin(phi), cos(phi));
+            //Vec dir(RAND - 0.5, RAND - 0.5, RAND - 0.5); //Uneven distribution, fix this
             dir.normalize();
             if ((normal.dot(dir) < 0.0) == (normal.dot(d) < 0.0))
                 dir = dir * -1.0;
 
             Vec normalCol = Cast(closestHit.location,dir,depth - 1);
             //PixelColor = PixelColor + normalCol / 15.0;
-            PixelColor = PixelColor + normalCol / (lightSamples / 15.0) * (1.0 - normal.dot(dir));
+            //PixelColor = PixelColor + normalCol / (lightSamples / LIGHT_INT) * pow((1.0 - normal.dot(dir)),1);
+            PixelColor = PixelColor + normalCol / (lightSamples / LIGHT_INT);
         }
     }
 
