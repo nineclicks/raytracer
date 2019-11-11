@@ -82,7 +82,7 @@ void Scene::drawPixel(double x, double y) {
                 double mx = (double)x + m1 / superSample;
                 double my = (double)y + m2 / superSample;
                 getPixelVector(mx,my,&o,&d);
-                co = co + Cast(o, d, recursion);
+                co = co + Cast(o, d, recursion, true);
             }
         }
     }else if (sampleMethod == 1) {
@@ -91,7 +91,7 @@ void Scene::drawPixel(double x, double y) {
             double mx = (double)x + RAND;
             double my = (double)y + RAND;
             getPixelVector(mx,my,&o,&d);
-            co = co + Cast(o, d, recursion);
+            co = co + Cast(o, d, recursion, true);
         }
     }
     co = co * (1.0/superSample/superSample);
@@ -236,13 +236,17 @@ double Scene::Occlusion(hit h, Vec d) {
 }
 
 hit Scene::Closest(Vec o, Vec d){
+    return Closest(o, d, true);
+}
+
+hit Scene::Closest(Vec o, Vec d, bool incLight){
     double closest = INF;
     hit closestHit(0);
     Vec newO = o + (d.GetNormalized() * 0.0001);//step forward a little
     for (uint i = 0; i < Objects.size(); i++) {
 
         hit h = Objects[i]->Trace(newO, d);
-        if (h.contact && h.distance < closest) {
+        if (h.contact && h.distance < closest && !(incLight == false && Objects[i]->texture.intensity == 1.0)) {
             closest = h.distance;
             closestHit = h;
         }
@@ -251,6 +255,10 @@ hit Scene::Closest(Vec o, Vec d){
 }
 
 Vec Scene::Cast(Vec o, Vec d, int depth) {
+   return Cast(o,d,depth,false); 
+}
+
+Vec Scene::Cast(Vec o, Vec d, int depth, bool camera) {
     Vec PixelColor;
     Object *ob;
     hit closestHit = Closest(o,d);
@@ -263,10 +271,15 @@ Vec Scene::Cast(Vec o, Vec d, int depth) {
         ob = closestHit.object;
         Vec c = ob->Color(closestHit);
         Vec l;
-        if (ob->texture.intensity == 1.0)
+        if (ob->texture.intensity == 1.0 && !camera) {
             l = Vec(1.0,1.0,1.0);
-        else
+        } else if (ob->texture.intensity == 1.0 && camera) {
+            //l = Vec(1.0,1.0,1.0);
+            closestHit = Closest(o,d,false);
             l = TraceLight(closestHit,d);
+        } else {
+            l = TraceLight(closestHit,d);
+        }
         if (ob->texture.reflection < 1.0) {//Dont bother with color if it is 100% reflective
             PixelColor[0] = c[0] * l[0];
             PixelColor[1] = c[1] * l[1];

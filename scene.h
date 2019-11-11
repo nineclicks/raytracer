@@ -86,6 +86,8 @@ public:
     double Occlusion(hit h, Vec d);
     Vec TraceLight(hit, Vec);
     hit Closest(Vec, Vec);
+    hit Closest(Vec, Vec, bool);
+    Vec Cast(Vec o, Vec d, int depth, bool camera);
     Vec Cast(Vec o, Vec d, int depth);
     
 };

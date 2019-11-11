@@ -190,8 +190,8 @@ void Parser::parse(Scene *sc, char* fileName) {
             double x, y, z;
             line >> x >> y >> z;
             o->origin.set(x,y,z);
-            if (o->texture.intensity == 1.0)
-                o->origin.set(x,y,z-(double)superX/30);
+            //if (o->texture.intensity == 1.0)
+            //    o->origin.set(x,y,z-(double)superX/30);
         } else if (type == "normal:" && o != NULL) {
             double x, y, z;
             line >> x >> y >> z;
