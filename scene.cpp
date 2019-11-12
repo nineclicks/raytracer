@@ -100,21 +100,21 @@ void Scene::drawPixel(double x, double y) {
 
 void Scene::drawRange(int threadCount, int threadNum) {
     int lastRep = 0;
-    printf("Thread: %d, core: %d\n", threadNum, sched_getcpu());
+    //printf("Thread: %d, core: %d\n", threadNum, sched_getcpu());
     double imLength = image.width * image.height;
     for (double xy = threadNum; xy < imLength; xy+=threadCount) {
         double x = fmod(xy,image.width);
         double y = floor(xy / image.width);
         drawPixel(x, y);
         if (threadNum == 0) {
-            int rep = (int)(xy / imLength * 20.0);
+            int rep = (int)(xy / imLength * 10.0);
             if (rep > lastRep) {
                 lastRep = rep;
-                printf("%d%%\n", rep * 5);
+                printf("%d%%\n", rep * 10);
             }
         }
     }
-    printf("Thread: %d, core: %d, done\n", threadNum, sched_getcpu());
+    //printf("Thread: %d, core: %d, done\n", threadNum, sched_getcpu());
 }
 
 void Scene::drawScene() {
@@ -287,7 +287,7 @@ Vec Scene::Cast(Vec o, Vec d, int depth, bool camera) {
         }
     }
 
-    if (depth > 0) {
+    if (depth > 0 && false) {
         double lightSamples = LIGHT_SAMPLES;
         Vec normal = closestHit.normal;
 

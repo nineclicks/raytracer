@@ -15,7 +15,10 @@ void Parser::parseOBJ(Scene *sc, const char* fileName) {
         if (type == "v") {
             double x, y, z;
             line >> x >> y >> z;
-            Vecs.push_back(Vec(x,y,z * -1.0));
+            double theta = superX * 3.14159 / 180.0;
+            double x2 = x * cos(theta) - y * sin(theta);
+            double y2 = x * sin(theta) + y * cos(theta);
+            Vecs.push_back(Vec(x2,y2,z * -1.0));
         } else if (type == "f") {
             int x, y, z;
             line >> x >> y >> z;
