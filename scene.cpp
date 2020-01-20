@@ -287,7 +287,7 @@ Vec Scene::Cast(Vec o, Vec d, int depth, bool camera) {
         }
     }
 
-    if (depth > 0 && false) {
+    if (depth > 0) {
         double lightSamples = LIGHT_SAMPLES;
         Vec normal = closestHit.normal;
 
